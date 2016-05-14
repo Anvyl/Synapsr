@@ -28,7 +28,10 @@ namespace Synapsr
         /// </summary>
         public App()
         {
-            this.InitializeComponent();
+			Microsoft.ApplicationInsights.WindowsAppInitializer.InitializeAsync(
+				Microsoft.ApplicationInsights.WindowsCollectors.Metadata |
+				Microsoft.ApplicationInsights.WindowsCollectors.Session);
+			this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
 
