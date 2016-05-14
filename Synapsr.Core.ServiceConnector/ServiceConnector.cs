@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -84,6 +85,7 @@ namespace Synapsr.Core.ServiceConnector
 			{
 				// Authentication failed. Handle parameter, SSL/TLS, and Network Unavailable errors here. 
 				result = ex.Message;
+				Debug.WriteLine(result);
 			}
 			return null;
 		}
