@@ -10,6 +10,7 @@ namespace Synapsr.Core.ServiceConnector
 			Trello,
 			Bot
 		}
+
 		public static void AddToken(string token, TokenType type)
 		{
 			switch (type)

@@ -1,5 +1,6 @@
 ﻿
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Synapsr.Core.Chat;
 using Synapsr.Core.Chat.Models;
 using Synapsr.Core.ServiceConnector;
@@ -15,22 +16,34 @@ namespace Synapsr.Core.Chat
 {
 	public interface IMessenger
 	{
-		void SendMessage(string message);
+		Task SendMessage(string text);
 		Task Connect();
 	}
 
 	public class SlackMessenger : IMessenger
 	{
 		IServiceConnector _connector;
+		SlackRTMEndPoint _endpoint;
 		MessageWebSocket socket = new MessageWebSocket();
 		public SlackMessenger(IServiceConnector connector)
 		{
 			_connector = connector;
+			socket.Control.MessageType = SocketMessageType.Utf8;
+			socket.MessageReceived += MessageReceived;
+
 		}
 
-		public void SendMessage(string message)
+		public async Task SendMessage(string text)
 		{
-
+			var message = new OutGoingMessage()
+			{
+				type = "message",
+				id = 1,
+				channel = _endpoint.channels[0].id,
+				text = text
+			};
+			var jsonMessage = JsonConvert.SerializeObject(message);
+			await SendJson(jsonMessage);
 		}
 
 		public async Task Connect()
@@ -47,32 +60,36 @@ namespace Synapsr.Core.Chat
 				TokenManager.AddToken(token.access_token, TokenManager.TokenType.Slack);
 			}
 
-			SlackRTMEndPoint endpoint = await AquireRTM(token);
-			socket.Control.MessageType = SocketMessageType.Utf8;
-			socket.MessageReceived += Socket_MessageReceived;
-			
-			Uri serverUri = new Uri(endpoint.url);
-			await socket.ConnectAsync(serverUri);
-			var message = new Message()
-			{
-				type = "message",
-				id = 1,
-				channel = endpoint.channels[0].id,
-				text = "darova natasha"
-			};
-			var jsonMessage = JsonConvert.SerializeObject(message);
+			_endpoint = await AquireRTM(token);
 
+			Uri serverUri = new Uri(_endpoint.url);
+			await socket.ConnectAsync(serverUri);
+			
+		}
+
+		private async Task SendJson(string jsonMessage)
+		{
 			DataWriter messageWriter = new DataWriter(socket.OutputStream);
 			messageWriter.WriteString(jsonMessage);
 			await messageWriter.StoreAsync();
-			Debug.WriteLine(jsonMessage);
 		}
 
-		private void Socket_MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
+		private void MessageReceived(MessageWebSocket sender, MessageWebSocketMessageReceivedEventArgs args)
 		{
-			var messageReader = args.GetDataReader();
-			var resutl = messageReader.ReadString(messageReader.UnconsumedBufferLength);
-			Debug.WriteLine(resutl);
+			DataReader messageReader = args.GetDataReader();
+			string result = messageReader.ReadString(messageReader.UnconsumedBufferLength);
+			JObject jobject = JObject.Parse(result);
+			JToken t = jobject["type"];
+			switch (t?.Value<string>())
+			{
+				case "hello":
+					break;
+				default:
+					break;
+			}
+
+
+			Debug.WriteLine(result);
 		}
 
 		public async Task<Token> AquireToken()
