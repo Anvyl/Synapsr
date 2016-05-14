@@ -2,6 +2,7 @@
 using Synapsr.Core.ServiceConnector;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -19,6 +20,12 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Synapsr
 {
+    public class Test
+    {
+        public string Username { get; set; }
+        public string Message { get; set; }
+        public string AvatarUrl { get; set; }
+    }
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -33,7 +40,13 @@ namespace Synapsr
 
 		private void PageLoaded(object sender, RoutedEventArgs e)
 		{
-			IServiceConnector connector = new ServiceConnector();
+            ObservableCollection<Test> items = new ObservableCollection<Test>();
+            items.Add(new Test() { Username = "aodpi", Message = "zdarova natasha", AvatarUrl = "https://avatars1.githubusercontent.com/u/6562956?v=3&s=40" });
+            items.Add(new Test() { Username = "aodpi", Message = "zdarova natasha", AvatarUrl = "https://avatars1.githubusercontent.com/u/6562956?v=3&s=40" });
+            items.Add(new Test() { Username = "aodpi", Message = "zdarova natasha", AvatarUrl = "https://avatars1.githubusercontent.com/u/6562956?v=3&s=40" });
+            items.Add(new Test() { Username = "aodpi", Message = "zdarova natasha", AvatarUrl = "https://avatars1.githubusercontent.com/u/6562956?v=3&s=40" });
+            MessagesContainer.ItemsSource = items;
+            IServiceConnector connector = new ServiceConnector();
 			IMessenger messenger = new SlackMessenger(connector);
 			messenger.Connect();
 		}

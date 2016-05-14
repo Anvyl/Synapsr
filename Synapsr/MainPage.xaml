@@ -8,6 +8,20 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <ItemsControl x:Name="MessagesContainer">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Background="{ThemeResource SystemAccentColor}" Orientation="Horizontal" Margin="5">
+                        <Image Source="{Binding AvatarUrl}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Image>
 
+                        <StackPanel Orientation="Vertical" Margin="5,0,0,0">
+                                <TextBlock Text="{Binding Username}" Grid.Row="0"></TextBlock>
+                                <TextBlock Text="{Binding Message}" Grid.Row="1"></TextBlock>
+                        </StackPanel>
+
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </Page>
