@@ -9,16 +9,22 @@ using Windows.Security.Authentication.Web;
 
 namespace Synapsr.Core.ServiceConnector
 {
+    public enum MethodType
+    {
+        POST,
+        GET
+    }
 
-	public interface IServiceConnector
+    public interface IServiceConnector
 	{
-		Task<Token> Connect(string startURL, string endURL, string tokenURL);
+		Task<Token> Connect(string startURL, string endURL, string tokenURL,MethodType method);
 	}
 
     public class ServiceConnector : IServiceConnector
 	{
 		HttpClient client = new HttpClient();
-		public async Task<Token> Connect(string startURL, string endURL, string tokenURL)
+        
+		public async Task<Token> Connect(string startURL, string endURL, string tokenURL,MethodType method)
 		{
 			string result;
 			Uri startURI = new Uri(startURL);
@@ -37,12 +43,25 @@ namespace Synapsr.Core.ServiceConnector
 					case WebAuthenticationStatus.Success:
 						// Successful authentication. 
 						result = webAuthenticationResult.ResponseData.ToString();
-						var pattern = "code=(.+?)&";
-						var match = Regex.Match(result, pattern);
-						if (match.Groups.Count > 1)
+						var pattern = @"code=(.+?)&";
+						var match = Regex.Match(result+"&", pattern);
+						if (match.Groups.Count > 0)
 						{
-							var code = match.Groups[1].Captures[0].Value;
-							HttpResponseMessage response = await client.GetAsync(tokenURL + code);
+							var code = match.Groups[0].Captures[0].Value;
+                            HttpResponseMessage response = null;
+                            switch (method)
+                            {
+                                case MethodType.POST:
+                                    StringContent cnt = new StringContent("");
+                                    response = await client.PostAsync(tokenURL + code,cnt);
+                                    break;
+                                case MethodType.GET:
+                                    response = await client.GetAsync(tokenURL + code);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            
 							if(response.IsSuccessStatusCode)
 							{
 								string json = await response.Content.ReadAsStringAsync();

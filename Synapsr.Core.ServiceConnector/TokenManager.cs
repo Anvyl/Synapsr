@@ -7,7 +7,7 @@ namespace Synapsr.Core.ServiceConnector
 		public enum TokenType
 		{
 			Slack,
-			Trello,
+			Asana,
 			Bot
 		}
 		public static void AddToken(string token, TokenType type)
@@ -17,8 +17,8 @@ namespace Synapsr.Core.ServiceConnector
 				case TokenType.Slack:
 					ApplicationData.Current.LocalSettings.Values["slack_token"] = token;
 					break;
-				case TokenType.Trello:
-					ApplicationData.Current.LocalSettings.Values["trello_token"] = token;
+				case TokenType.Asana:
+					ApplicationData.Current.LocalSettings.Values["asana_token"] = token;
 					break;
 				case TokenType.Bot:
 					ApplicationData.Current.LocalSettings.Values["bot_token"] = token;
@@ -34,8 +34,8 @@ namespace Synapsr.Core.ServiceConnector
 			{
 				case TokenType.Slack:
 					return ApplicationData.Current.LocalSettings.Values["slack_token"]?.ToString() ?? string.Empty;
-				case TokenType.Trello:
-					return ApplicationData.Current.LocalSettings.Values["trello_token"]?.ToString() ?? string.Empty;
+				case TokenType.Asana:
+					return ApplicationData.Current.LocalSettings.Values["asana_token"]?.ToString() ?? string.Empty;
 				case TokenType.Bot:
 					return ApplicationData.Current.LocalSettings.Values["bot_token"]?.ToString() ?? string.Empty;
 				default:

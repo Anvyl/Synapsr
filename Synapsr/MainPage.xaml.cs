@@ -14,7 +14,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-
+using Synapsr.Core.TaskManagement;
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace Synapsr
@@ -34,8 +34,10 @@ namespace Synapsr
 		private void PageLoaded(object sender, RoutedEventArgs e)
 		{
 			IServiceConnector connector = new ServiceConnector();
-			IMessenger messenger = new SlackMessenger(connector);
-			messenger.Connect();
+            IMessenger msg = new SlackMessenger(connector);
+            msg.Connect();
+            ITaskManagement mng = new AsanaTaskManagement(connector);
+            mng.Connect();
 		}
 	}
 }

@@ -79,8 +79,8 @@ namespace Synapsr.Core.Chat
 		{
 			string startURL = "https://slack.com/oauth/authorize?client_id=42964459713.42961925893&scope=client";
 			string endURL = "http://facebook.com";
-			string tokenURL = "https://slack.com/api/oauth.access?client_id=42964459713.42961925893&client_secret=bb2eb7758bb58135d456c329a9cb1c50&code=";
-			return await _connector.Connect(startURL, endURL, tokenURL);
+			string tokenURL = "https://slack.com/api/oauth.access?client_id=42964459713.42961925893&client_secret=bb2eb7758bb58135d456c329a9cb1c50&";
+			return await _connector.Connect(startURL, endURL, tokenURL, MethodType.GET);
 		}
 
 		public async Task<SlackRTMEndPoint> AquireRTM(Token token)
