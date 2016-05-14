@@ -1,5 +1,6 @@
 ﻿
 using Newtonsoft.Json;
+using Synapsr.Core.Chat;
 using Synapsr.Core.Chat.Models;
 using Synapsr.Core.ServiceConnector;
 using System;
@@ -46,7 +47,7 @@ namespace Synapsr.Core.Chat
 				TokenManager.AddToken(token.access_token, TokenManager.TokenType.Slack);
 			}
 
-			SlackRTMEndpoint endpoint = await AquireRTM(token);
+			SlackRTMEndPoint endpoint = await AquireRTM(token);
 			socket.Control.MessageType = SocketMessageType.Utf8;
 			socket.MessageReceived += Socket_MessageReceived;
 			
@@ -56,7 +57,7 @@ namespace Synapsr.Core.Chat
 			{
 				type = "message",
 				id = 1,
-				channel = "C18TZ9YT0",
+				channel = endpoint.channels[0].id,
 				text = "darova natasha"
 			};
 			var jsonMessage = JsonConvert.SerializeObject(message);
@@ -82,7 +83,7 @@ namespace Synapsr.Core.Chat
 			return await _connector.Connect(startURL, endURL, tokenURL);
 		}
 
-		public async Task<SlackRTMEndpoint> AquireRTM(Token token)
+		public async Task<SlackRTMEndPoint> AquireRTM(Token token)
 		{
 			string rtmURL = "https://slack.com/api/rtm.start?token=" + token.access_token;
 			HttpClient client = new HttpClient();
@@ -90,7 +91,7 @@ namespace Synapsr.Core.Chat
 			if (response.IsSuccessStatusCode)
 			{
 				string json = await response.Content.ReadAsStringAsync();
-				return Newtonsoft.Json.JsonConvert.DeserializeObject<SlackRTMEndpoint>(json);
+				return JsonConvert.DeserializeObject<SlackRTMEndPoint>(json);
 			}
 			return null;
 
