@@ -35,13 +35,15 @@ namespace Synapsr.Core.Chat
 		public async Task Connect()
 		{
 			Token token;
-			if(false) //TODO check if token is cached in settings
+			var cachedToken = TokenManager.GetToken(TokenManager.TokenType.Slack);
+			if (cachedToken != string.Empty) //TODO check if token is cached in settings
 			{
-
+				token = new Token { access_token = cachedToken };
 			}
 			else //GET tocket
 			{
 				token = await AquireToken();
+				TokenManager.AddToken(token.access_token, TokenManager.TokenType.Slack);
 			}
 
 			SlackRTMEndpoint endpoint = await AquireRTM(token);

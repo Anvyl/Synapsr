@@ -99,7 +99,6 @@
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OAuth\TokenManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +126,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Synapsr.Core.Chat\Synapsr.Core.Chat.csproj">
+      <Project>{44A6ADFC-175B-4141-8414-2824F3D25F31}</Project>
+      <Name>Synapsr.Core.Chat</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Synapsr.Core.ServiceConnector\Synapsr.Core.ServiceConnector.csproj">
+      <Project>{D4388807-2B3B-4FE8-9E08-B8612EEE84E9}</Project>
+      <Name>Synapsr.Core.ServiceConnector</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Synapsr.Core.Chat;
+using Synapsr.Core.ServiceConnector;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -25,6 +27,15 @@ namespace Synapsr
         public MainPage()
         {
             this.InitializeComponent();
+			this.Loaded += PageLoaded;
+
         }
-    }
+
+		private void PageLoaded(object sender, RoutedEventArgs e)
+		{
+			IServiceConnector connector = new ServiceConnector();
+			IMessenger messenger = new SlackMessenger(connector);
+			messenger.Connect();
+		}
+	}
 }
