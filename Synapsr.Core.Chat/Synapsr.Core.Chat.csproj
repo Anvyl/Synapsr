@@ -107,6 +107,8 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Slack\History.cs" />
+    <Compile Include="Models\Slack\Message.cs" />
     <Compile Include="Models\Slack\OutGoingMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SlackMessenger.cs" />
